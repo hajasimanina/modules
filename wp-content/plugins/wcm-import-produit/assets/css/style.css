@@ -1,0 +1,127 @@
+#wpcontent {
+    padding-left: 0;
+}
+
+.wcm-import-header {
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+    align-items: center;
+    position: unset;
+    top: 32px;
+    height: 72px;
+    z-index: 800;
+    background: #344054;
+    box-sizing: border-box;
+}
+
+.wcm-import-header, #wcm-import-form {
+    margin-left: -20px;
+    padding: 16px 32px;
+}
+
+.wcm-import-header button {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 40px;
+    margin-right: 8px;
+    padding: 8px 16px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 6px;
+    color: #98A2B3;
+    text-decoration: none;
+    background: #344054;
+    font-size: 16px;
+    margin-left: 5px;
+}
+
+.wcm-import-header button i {
+    margin-right: 5px;
+}
+
+.wcm-import-header button:hover, .wcm-import-header button.active {
+    background-color: #475467;
+    color: #F9FAFB;
+}
+
+#wcm-import-form {
+    display: inline-grid !important;
+}
+
+#wcm-import-form input.button {
+    margin-top: 5px;
+}
+
+.wcm-import-header h2 {
+    color: #98A2B3 !important;
+}
+
+.wcm-ip-uploader-inline {
+    overflow: auto;
+    outline: none;
+    margin-right: 0;
+    margin-bottom: 20px;
+    padding: 0;
+    text-align: center;
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+    margin-top: 20px;
+    border: 4px dashed #c3c4c7;
+}
+
+.wcm-ip-uploader-inline.hidden {
+    display: none;
+}
+
+.wcm-ip-uploader-inline .close {
+    background-color: transparent;
+    border: 0!important;
+    cursor: pointer;
+    height: 48px;
+    outline: none;
+    padding: 0;
+    position: absolute;
+    right: 2px;
+    text-align: center;
+    top: 2px;
+    width: 48px;
+    z-index: 1;
+}
+
+.wcm-ip-uploader-inline .close:before {
+    font: normal 30px/1 dashicons !important;
+    color: #50575e;
+    display: inline-block;
+    content: "\f335";
+    font-weight: 300;
+    margin-top: 1px;
+}
+
+.wcm-ip-uploader-inline .close:focus {
+    outline: 1px solid #4f94d4;
+    box-shadow: 0 0 3px rgba(34, 113, 177, 0.8);
+}
+
+.wcm-ip-uploader-inline.error {
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #fff;
+    border-left: 4px solid #d63638;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.wcm-ip-uploader-inline-content {
+    top: 30%;
+    left: 0;
+    right: 0;
+}
+
+.wcm-ip-uploader-inline-content .upload-ui {
+    margin: 2em 0;
+}
