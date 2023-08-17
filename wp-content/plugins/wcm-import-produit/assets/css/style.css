@@ -45,6 +45,7 @@
 .wcm-import-header button:hover, .wcm-import-header button.active {
     background-color: #475467;
     color: #F9FAFB;
+    cursor: pointer;
 }
 
 #wcm-import-form {
@@ -59,8 +60,8 @@
     color: #98A2B3 !important;
 }
 
-.wcm-ip-uploader-inline {
-    overflow: auto;
+.wcm-ip-uploader-inline, .wcm-ip-import-product {
+    overflow: hidden;
     outline: none;
     margin-right: 0;
     margin-bottom: 20px;
@@ -75,11 +76,11 @@
     border: 4px dashed #c3c4c7;
 }
 
-.wcm-ip-uploader-inline.hidden {
+.wcm-ip-uploader-inline.hidden, .wcm-ip-import-product.hidden {
     display: none;
 }
 
-.wcm-ip-uploader-inline .close {
+.wcm-ip-uploader-inline .close, .wcm-ip-import-product .close {
     background-color: transparent;
     border: 0!important;
     cursor: pointer;

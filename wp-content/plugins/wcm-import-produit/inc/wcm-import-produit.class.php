@@ -1,5 +1,6 @@
 <?php
 
+use Box\Spout\Common\Type;
 use Box\Spout\Reader\ReaderFactory;
 
 require_once( WCM_IP_PATH . '/lib/Spout/Autoloader/autoload.php' );
@@ -8,7 +9,7 @@ class WCM_Import_Produit {
 	public function __construct() {
 		add_action( 'admin_menu' , array( $this , 'admin_menu' ) );
 		add_action( 'admin_enqueue_scripts' , array( $this , 'admin_enqueues' ) );
-		add_action( 'admin_init' , array( $this , 'import_process' ) );
+		add_action( 'admin_init' , array( $this , 'import_validation' ) );
 	}
 
 	public function admin_menu() {
@@ -50,49 +51,70 @@ class WCM_Import_Produit {
 			false , );
 	}
 
-	public function import_process() {
-		$error = true;
+	public function import_validation() {
+		$errors = array();
+		global $wcm_validation_errors;
 		if ( isset( $_POST['_wpnonce_import'] ) && wp_verify_nonce( $_POST['_wpnonce_import'] , 'wcm_file_add_import' )
- ) {
+		) {
 			$upload_dir = wp_upload_dir();
 			if ( isset( $_POST['wcm_import_action'] ) ) {
-				if ( !empty( $upload_dir['basedir'] ) && !empty( $_FILES['upload_file']['tmp_name'] ) ) {
+				if ( !empty( $upload_dir['basedir'] ) && !empty( $_FILES['wcm_product_file']['tmp_name'] ) ) {
 					$file_dirname = $upload_dir['basedir'] . '/wcm-import-produit';
 					if ( !file_exists( $file_dirname ) ) {
 						wp_mkdir_p( $file_dirname );
 					}
 
-					$excel_path = $_FILES['upload_file']['tmp_name'];
+					$excel_path = $_FILES['wcm_product_file']['tmp_name'];
 					$reader     = ReaderFactory::create( Type::XLSX );
 					$reader->open( $excel_path );
-					foreach ( $reader->getSheetIterator() as $sheet ) {
-						$existing_file_sheet_name = $sheet->getName();
-						if ( $existing_file_sheet_name ) {
-							$i = 0;
-							foreach ( $sheet->getRowIterator() as $row ) {
-								if ( $i > 0 ) {
-									if ( isset( $row[2] ) && !empty( $row[2] ) ) {
-										if ( $row[2] instanceof DateTime ) {
-											$error = false;
-										} else {
-											$error = true;
-											break;
+					$sheets = $reader->getSheetIterator();
+					if ( !empty( $sheets ) ) {
+						foreach ( $sheets as $sheet ) {
+							$file_sheet_name = $sheet->getName();
+							if ( $file_sheet_name ) {
+								$i    = 0;
+								$rows = $sheet->getRowIterator();
+
+								if ( !empty( $rows ) ) {
+									foreach ( $rows as $row ) {
+										if ( $i > 0 ) {
+											$type     = $row[0];
+											$wc_types = wc_get_product_types();
+											$wc_types = array_keys( $wc_types );
+											if ( !empty( $type ) ) {
+												if ( !in_array( $type , $wc_types ) ) {
+													$errors[] = "Type $type dans la LIGNE $i n'existe plus dans WooCommerce";
+												}
+											}
 										}
+										$i ++;
 									}
 								}
-								$i ++;
 							}
 						}
-					}
-					if ( !$error ) {
-						move_uploaded_file( $_FILES['upload_file']['tmp_name'] , $file_dirname . '/' . 'previsions.xlsx' );
-					} else {
-						$error_message = 'La date de la prévision n\'est pas avec la bonne format. Veuillez corriger le probleme avant de faire l\'import';
-						add_settings_error( 'wcm-import-produit' , '' , $error_message , 'error' );
-						settings_errors( 'wcm-import-produit' );
+
+
+						if ( empty( $errors ) ) {
+							move_uploaded_file( $_FILES['wcm_product_file']['tmp_name'] , $file_dirname . '/' . 'wcm-produit.xlsx' );
+						}
 					}
 				}
 			}
+		}
+
+		$wcm_validation_errors = $errors;
+		$error_message         = implode( '<br>' , $wcm_validation_errors );
+		add_settings_error( 'wcm_validation_errors' , '401' , $error_message , 'error' );
+
+		return true;
+	}
+
+	public static function isExcelValid() {
+		$wcm_errors = get_settings_errors( 'wcm_validation_errors' );
+		if ( !empty( $wcm_errors[0]['message'] ) ) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 }

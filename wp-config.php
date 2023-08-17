@@ -92,7 +92,7 @@ define( 'WP_DEBUG_DISPLAY' , false );
 /* C’est tout, ne touchez pas à ce qui suit ! Bonne publication. */
 
 /** Chemin absolu vers le dossier de WordPress. */
-if ( ! defined( 'ABSPATH' ) ) {
+if ( !defined( 'ABSPATH' ) ) {
 	define( 'ABSPATH' , dirname( __FILE__ ) . '/' );
 }
 
